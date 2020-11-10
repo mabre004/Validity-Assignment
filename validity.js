@@ -1,3 +1,11 @@
-let msg = "Hello World";
+const csv = require("csv-parser");
 
-console.log(msg);
+const fs = require("fs");
+const results = [];
+
+fs.createReadStream("normal.csv")
+  .pipe(csv({}))
+  .on("data", (data) => results.push(data))
+  .on("end", () => {
+    console.log(results);
+  });
