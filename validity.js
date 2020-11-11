@@ -3,8 +3,22 @@
 
 // app.listen(3000, () => console.log("listening at port 3000"));
 // app.use(express.static("public"));
-// app.post("/", printToWebPage(finalDuplicate, nonDuplicates));
 
+let http = require("http");
+let url = require("url");
+let fs = require("fs");
+
+// var express = require("express");
+// var bodyParser = require("body-parser");
+// var app = express();
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+// var server = app.listen(3000, function () {
+//   // create a server
+//   console.log("app running on port.", server.address().port);
+// });
 const { distance, closest } = require("fastest-levenshtein");
 
 /*
@@ -137,23 +151,77 @@ const converter = csv()
     const nonDuplicates = emp.filter(function (x) {
       return finalDuplicate.indexOf(x) < 0;
     }); // remove duplicates from the first array
+
     function printToWebPage(finalDuplicate, nonDuplicates) {
-      console.log(
-        "----------------------Duplicates---------------------------------"
-      );
+      const nonDupCons =
+        "------------------------Non Duplicates------------------------------\n";
+      const dupCons =
+        "----------------------------Duplicates---------------------------------\n";
+
+      fs.writeFile("Output.txt", dupCons, (err) => {
+        if (err) throw err;
+      });
+
       for (let employee of finalDuplicate) {
-        console.log(toString(employee));
+        let finalDupEmp = toString(employee) + "\n";
+        fs.appendFile("Output.txt", finalDupEmp, (err) => {
+          // In case of a error throw err.
+          if (err) throw err;
+        });
       }
 
-      console.log(
-        "----------------------Non Duplicates------------------------------------"
-      );
+      fs.appendFile("Output.txt", nonDupCons, (err) => {
+        if (err) throw err;
+      });
 
       for (let employee of nonDuplicates) {
-        console.log(toString(employee));
+        let nonDupEmp = toString(employee) + "\n";
+        fs.appendFile("Output.txt", nonDupEmp, (err) => {
+          // In case of a error throw err.
+          if (err) throw err;
+        });
       }
     }
+    printToWebPage(finalDuplicate, nonDuplicates);
+    //let result = printToWebPage(finalDuplicate, nonDuplicates);
 
-    console.log(printToWebPage(finalDuplicate, nonDuplicates));
-    //console.log(nonDuplicates);
+    // writing code output to text file
+
+    http
+      .createServer(function (request, response) {
+        //   //   var path = url.parse(request.url).pathname;
+        //   //   switch (path) {
+        //   //     // case "/":
+        //   //     //   response.writeHead(200, {
+        //   //     //     "Content-Type": "text/plain",
+        //   //     //   });
+        //   //     //   response.write("This is Test Message.");
+        //   //     //   response.end();
+        //   //     //   break;
+        //   //     case "/":
+
+        fs.readFile("Output.txt", function (error, data) {
+          if (error) {
+            response.writeHead(404);
+            response.write(error);
+            response.end();
+          } else {
+            response.writeHead(200, {
+              "Content-Type": "text/html",
+            });
+            response.write(data);
+            return response.end();
+          }
+        });
+        //       break;
+        //     default:
+        //       response.writeHead(404);
+        //       response.write("opps this doesn't exist - 404");
+        //       response.end();
+        //       break;
+        //   }
+      })
+      .listen(3000);
+
+    //console.log(printToWebPage(finalDuplicate, nonDuplicates));
   });
