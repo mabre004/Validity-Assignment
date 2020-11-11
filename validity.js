@@ -1,3 +1,10 @@
+// const express = require("express");
+// const app = express();
+
+// app.listen(3000, () => console.log("listening at port 3000"));
+// app.use(express.static("public"));
+// app.post("/", printToWebPage(finalDuplicate, nonDuplicates));
+
 const { distance, closest } = require("fastest-levenshtein");
 
 /*
@@ -74,35 +81,33 @@ class Employee {
     return this.phon;
   }
 }
-function toString() {
+function toString(emp) {
   return (
-    firstName +
+    emp.first_name +
     "," +
-    lastName +
+    emp.last_name +
     "," +
-    company +
+    emp.comp +
     "," +
-    email +
+    emp.em +
     "," +
-    address1 +
+    emp.add1 +
     "," +
-    address2 +
+    emp.add2 +
     "," +
-    zip +
+    emp.zipCode +
     "," +
-    city +
+    emp.cit +
     "," +
-    state_long +
+    emp.state_lon +
     "," +
-    state +
+    emp.st +
     "," +
-    phone
+    emp.phon
   );
 }
-
 let emp = [];
 let duplicates = [];
-
 const csv = require("csvtojson");
 
 const converter = csv()
@@ -118,11 +123,10 @@ const converter = csv()
   .then(() => {
     for (let i = 0; i < emp.length; i++) {
       for (let j = i + 1; j < emp.length; j++) {
-        if (distance(emp[i].email.toString(), emp[j].email.toString()) === 0) {
+        if (distance(emp[i].email, emp[j].email) === 0) {
           duplicates.push(emp[i]);
           duplicates.push(emp[j]);
         }
-        //}
       }
     }
 
@@ -133,7 +137,23 @@ const converter = csv()
     const nonDuplicates = emp.filter(function (x) {
       return finalDuplicate.indexOf(x) < 0;
     }); // remove duplicates from the first array
+    function printToWebPage(finalDuplicate, nonDuplicates) {
+      console.log(
+        "----------------------Duplicates---------------------------------"
+      );
+      for (let employee of finalDuplicate) {
+        console.log(toString(employee));
+      }
 
-    //console.log(finalDuplicate);
-    console.log(nonDuplicates);
+      console.log(
+        "----------------------Non Duplicates------------------------------------"
+      );
+
+      for (let employee of nonDuplicates) {
+        console.log(toString(employee));
+      }
+    }
+
+    console.log(printToWebPage(finalDuplicate, nonDuplicates));
+    //console.log(nonDuplicates);
   });
