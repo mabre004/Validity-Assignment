@@ -1,6 +1,8 @@
+const { distance, closest } = require("fastest-levenshtein");
+
 /*
-  Since the data is an Array of json Objects, I will create a Class called Employee.
-  Then I'll assign each json Object, using Object.assign(), to an Employee Object 
+  Since the data is an Array of json Objects when it's parsed, I will create a Class called Employee.
+  Then I'll assign each json Object, using Object.assign(), to an Employee Object
   and store them in an Array of Employee Objects named emp[]
 */
 
@@ -72,7 +74,34 @@ class Employee {
     return this.phon;
   }
 }
+function toString() {
+  return (
+    firstName +
+    "," +
+    lastName +
+    "," +
+    company +
+    "," +
+    email +
+    "," +
+    address1 +
+    "," +
+    address2 +
+    "," +
+    zip +
+    "," +
+    city +
+    "," +
+    state_long +
+    "," +
+    state +
+    "," +
+    phone
+  );
+}
+
 let emp = [];
+let duplicates = [];
 
 const csv = require("csvtojson");
 
@@ -87,9 +116,24 @@ const converter = csv()
     });
   })
   .then(() => {
-    let duplicates = [];
-    emp.forEach((em) => {
-      //for(let i = 0; )
-      console.log(em.email); // Invoke the Name getter
-    });
+    for (let i = 0; i < emp.length; i++) {
+      for (let j = i + 1; j < emp.length; j++) {
+        if (distance(emp[i].email.toString(), emp[j].email.toString()) === 0) {
+          duplicates.push(emp[i]);
+          duplicates.push(emp[j]);
+        }
+        //}
+      }
+    }
+
+    let duplicateRemove = new Set(duplicates);
+
+    let finalDuplicate = [...duplicateRemove];
+
+    const nonDuplicates = emp.filter(function (x) {
+      return finalDuplicate.indexOf(x) < 0;
+    }); // remove duplicates from the first array
+
+    //console.log(finalDuplicate);
+    console.log(nonDuplicates);
   });
