@@ -77,6 +77,9 @@ class Employee {
     return this.phon;
   }
 }
+/* 
+Function to convert object to string 
+*/
 function toString(emp) {
   return (
     emp.first_name +
@@ -102,7 +105,7 @@ function toString(emp) {
     emp.phon
   );
 }
-let emp = [];
+let emp = []; // Array to store employee record(including duplicates)
 let duplicates = [];
 const csv = require("csvtojson");
 
@@ -126,7 +129,7 @@ const converter = csv()
       }
     }
 
-    let duplicateRemove = new Set(duplicates);
+    let duplicateRemove = new Set(duplicates); // remove unnecessary duplicates
 
     let finalDuplicate = [...duplicateRemove];
 
@@ -165,9 +168,6 @@ const converter = csv()
       }
     }
     printToWebPage(finalDuplicate, nonDuplicates);
-    //let result = printToWebPage(finalDuplicate, nonDuplicates);
-
-    // writing code output to text file
 
     http
       .createServer(function (request, response) {
