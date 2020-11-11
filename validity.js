@@ -1,26 +1,8 @@
-// const express = require("express");
-// const app = express();
-
-// app.listen(3000, () => console.log("listening at port 3000"));
-// app.use(express.static("public"));
-
 let http = require("http");
 let url = require("url");
 let fs = require("fs");
 
-// var express = require("express");
-// var bodyParser = require("body-parser");
-// var app = express();
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// var server = app.listen(3000, function () {
-//   // create a server
-//   console.log("app running on port.", server.address().port);
-// });
 const { distance, closest } = require("fastest-levenshtein");
-
 /*
   Since the data is an Array of json Objects when it's parsed, I will create a Class called Employee.
   Then I'll assign each json Object, using Object.assign(), to an Employee Object
@@ -189,17 +171,6 @@ const converter = csv()
 
     http
       .createServer(function (request, response) {
-        //   //   var path = url.parse(request.url).pathname;
-        //   //   switch (path) {
-        //   //     // case "/":
-        //   //     //   response.writeHead(200, {
-        //   //     //     "Content-Type": "text/plain",
-        //   //     //   });
-        //   //     //   response.write("This is Test Message.");
-        //   //     //   response.end();
-        //   //     //   break;
-        //   //     case "/":
-
         fs.readFile("Output.txt", function (error, data) {
           if (error) {
             response.writeHead(404);
@@ -213,15 +184,6 @@ const converter = csv()
             return response.end();
           }
         });
-        //       break;
-        //     default:
-        //       response.writeHead(404);
-        //       response.write("opps this doesn't exist - 404");
-        //       response.end();
-        //       break;
-        //   }
       })
       .listen(3000);
-
-    //console.log(printToWebPage(finalDuplicate, nonDuplicates));
   });
